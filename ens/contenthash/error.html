@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Content Unreachable | eth.limo IPFS Gateway</title>
+    <title>{{if eq (placeholder "http.error.status_code") "404"}}ENS Domain Not Configured{{else}}Service Issue{{end}} | eth.limo</title>
     <style>
         * {
             margin: 0;
@@ -56,7 +56,7 @@
             width: 80px;
             height: 80px;
             background: linear-gradient(135deg, #C3EFD7, #C3EFD7);
-            border-radius: 50%;
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -103,6 +103,11 @@
             color: #cccccc;
             margin-bottom: 32px;
             line-height: 1.4;
+        }
+
+        #ensNameDisplay {
+            color: #C3EFD7;
+            font-weight: 600;
         }
 
         .error-details {
@@ -349,15 +354,6 @@
             position: relative;
         }
 
-        .code-block::before {
-            content: '$ ';
-            color: #888888;
-        }
-
-        .code-block.multi-line::before {
-            display: none;
-        }
-
         .step-number {
             display: inline-block;
             background: #C3EFD7;
@@ -420,191 +416,194 @@
             </div>
         </a>
 
-        <h1>Content Unreachable</h1>
-        <p class="subtitle">We're having trouble accessing your IPFS content right now.</p>
+        {{if eq (placeholder "http.error.status_code") "404"}}
+            <h1>ENS Domain Not Configured</h1>
+            <p class="subtitle"><span id="ensNameDisplay"></span> doesn't have a contenthash record.</p>
 
-        <div class="error-details">
-            <h3>What happened?</h3>
-            <p>This usually occurs when IPNS name resolution fails or the IPFS peers serving your content are currently
-                unreachable. Don't worry - this is often temporary and can be resolved with a few simple steps.</p>
-        </div>
+            <div class="error-details">
+                <h3>What's missing?</h3>
+                <p>In order to retrieve the web content associated with this ENS domain you must configure a contenthash record. This record is required for browsers and gateways to locate your website or application on decentralized storage networks.</p>
+            </div>
 
-        <div class="solutions">
-            <h2>Troubleshooting Steps</h2>
+            <div class="solutions">
+                <h2>Troubleshooting Guide</h2>
 
-            <div class="solution-section">
-                <h3>For IPNS Users</h3>
-                <p>If you're using IPNS (InterPlanetary Name System), your naming record might need to be republished or
-                    updated.</p>
-                <div class="action-buttons">
-                    <a href="https://ipns.ipfs.network/" class="btn btn-primary" target="_blank">
-                        🔍 IPNS Checker
-                    </a>
-                    <button class="btn btn-secondary" onclick="showIPNSHelp()">
-                        🔧 IPNS Guide
-                    </button>
+                <div class="solution-section">
+                    <h3>Check Current Records</h3>
+                    <p>Verify what records are currently set for your ENS domain and see if contenthash is configured.</p>
+                    <div class="action-buttons">
+                        <a href="#" id="ensLookupLink" class="btn btn-primary" target="_blank">
+                            🔍 ENS Lookup
+                        </a>
+                        <a href="#" id="etherscanLookupLink" class="btn btn-secondary" target="_blank">
+                            📒 Etherscan
+                        </a>
+                        <a href="#" id="dohLookupLink" class="btn btn-secondary" target="_blank">
+                            🖥️ dns.eth.limo
+                        </a>
+                    </div>
+                </div>
+
+                <div class="solution-section">
+                    <h3>Configure Contenthash</h3>
+                    <p>Use the ENS Manager to set up your contenthash record and point it to your decentralized content.</p>
+                    <div class="action-buttons">
+                        <a href="#" id="ensManagerLink" class="btn btn-primary" target="_blank">
+                            🔧 ENS Manager
+                        </a>
+                        <button class="btn btn-secondary" onclick="showContenthashHelp()">
+                            📚 Setup Guide
+                        </button>
+                    </div>
+                </div>
+
+                <div class="solution-section">
+                    <h3>Learn About ENS</h3>
+                    <p>New to ENS? Learn about how ENS domains work and how to manage your decentralized identity.</p>
+                    <div class="action-buttons">
+                        <a href="https://docs.ens.domains/" class="btn btn-primary" target="_blank">
+                            📖 ENS Documentation
+                        </a>
+                        <a href="https://eth-limo.gitbook.io/documentation" class="btn btn-secondary" target="_blank">
+                            🌐 eth.limo Documentation
+                        </a>
+                    </div>
                 </div>
             </div>
 
-            <div class="solution-section">
-                <h3>Check IPFS Content Reachability</h3>
-                <p>Verify if your content is properly distributed across the IPFS network using these diagnostic tools:
-                </p>
-                <div class="action-buttons">
-                    <a href="https://check.ipfs.network/" class="btn btn-primary" target="_blank">
-                        🔍 IPFS Checker
-                    </a>
-                    <a href="https://cid.contact/" class="btn btn-primary" target="_blank">
-                        🌍 IPNI Discovery
-                    </a>
+            <div class="help-section">
+                <h3>Need Help?</h3>
+                <p>If you're having trouble setting up your contenthash record, join the ENS community for support and guidance.</p>
+                <a href="https://discuss.ens.domains/" class="help-btn" target="_blank">
+                    💬 ENS Forum
+                </a>
+            </div>
+        {{else}}
+            <h1>Service Issue</h1>
+            <p class="subtitle">Looks like we're experiencing a problem right now.</p>
+
+            <div class="error-details">
+                <h3>What happened?</h3>
+                <p>We encountered an error while processing your request. This is usually temporary and should resolve itself shortly.</p>
+            </div>
+
+            <div class="solutions">
+                <h2>What you can do</h2>
+
+                <div class="solution-section">
+                    <h3>Try Again</h3>
+                    <p>The issue might be temporary. Wait a moment and refresh the page to try again.</p>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="location.reload()">
+                            🔄 Refresh Page
+                        </button>
+                    </div>
+                </div>
+
+                <div class="solution-section">
+                    <h3>Check Service Status</h3>
+                    <p>See if there are any known issues or maintenance periods affecting the service.</p>
+                    <div class="action-buttons">
+                        <a href="https://eth.limo" class="btn btn-primary" target="_blank">
+                            🏠 Homepage
+                        </a>
+                    </div>
                 </div>
             </div>
 
-            <div class="solution-section">
-                <h3>Network Status</h3>
-                <p>Sometimes the issue is temporary network connectivity. Try accessing your content through different
-                    gateways.</p>
-                <div class="action-buttons">
-                    <a href="https://ipfs.github.io/public-gateway-checker/" class="btn btn-primary" target="_blank">
-                        🌐 Gateway Status
-                    </a>
-                    <button class="btn btn-secondary" onclick="tryAlternativeGateways()">
-                        🔄 Try Other Gateways
-                    </button>
-                </div>
+            <div class="help-section">
+                <h3>Still Having Issues?</h3>
+                <p>If the problem persists, please reach out for support. Include the error details below when contacting us.</p>
+                <p><strong>Error:</strong> {{placeholder "http.error.status_code"}} {{placeholder "http.error.status_text"}}</p>
+                <a href="https://discord.gg/zf8NxW94rB" class="help-btn" target="_blank">
+                    🎫 Get Support
+                </a>
             </div>
-        </div>
-
-        <div class="help-section">
-            <h3>Still Having Issues?</h3>
-            <p>If the problem persists after trying these steps, it might be a temporary network propagation
-                issue.<br><br>If you require additional assistance please join our Discord <a
-                    href="http://discord.gg/zf8NxW94rB" target="_blank" style="color: #C3EFD7;"> server</a> and create a
-                ticket in the <code>#support-tickets</code> channel and we will get back to you as soon as we can.</p>
-            <a href="https://discord.gg/7HkTmrpuP9" class="help-btn" target="_blank">
-                📜 Get Help
-            </a>
-        </div>
+        {{end}}
     </div>
 
-    <div id="ipnsModal" class="modal">
+    {{if eq (placeholder "http.error.status_code") "404"}}
+    <div id="contenthashModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">🔧 IPNS Guide</h2>
-                <span class="close" onclick="closeModal('ipnsModal')">&times;</span>
+                <h2 class="modal-title">📚 Contenthash Setup Guide</h2>
+                <span class="close" onclick="closeModal('contenthashModal')">&times;</span>
             </div>
             <div class="modal-body">
-                <hr width="50%" color="#C3EFD7" /><br>
-                <h3>🚀 Hosted IPFS Services</h3><br>
-                <p>If managing your own IPFS infrastructure is challenging, consider using hosted services for more
-                    reliable IPFS and IPNS hosting:</p>
-                <div class="action-buttons" style="margin: 15px 0;">
-                    <a href="https://fleek.xyz/docs/platform/hosting/" class="btn btn-primary" target="_blank">
-                        🚀 Fleek
-                    </a>
-                    <a href="https://filebase.com/" class="btn btn-primary" target="_blank">
-                        📁 Filebase
-                    </a>
-                </div>
-                <p>These services handle IPFS pinning, IPNS records management, and provide reliable gateways without
-                    requiring you to run your own IPFS node.</p>
-                <p>If you are already using a hosted IPFS/IPNS service provider please double-check the following:</p>
-                <h4><span class="step-number">1</span>Ensure the IPFS content has been uploaded and pinned with the
-                    provider.</h4>
-                <h4><span class="step-number">2</span>Verify all IPNS configurations and ensure the record points to the
-                    latest version of your content (CID).</h4>
-                <h4><span class="step-number">3</span>Consider any provider related outages by checking their service
-                    status pages and optionally engaging with support staff who might be able to assist you.</h4>
-                <h4><span class="step-number">4</span>Confirm the content is reachable by using the <a
-                        href="https://ipns.ipfs.network/" target="_blank" style="color: #C3EFD7;">IPNS</a> and <a
-                        href="https://check.ipfs.network/" target="_blank" style="color: #C3EFD7;">IPFS</a> checker
-                    utilities.</h4><br>
-                <hr width="50%" color="#C3EFD7" /><br>
-                <h3>Alternative: Self-Hosted IPNS</h3><br>
-                <p>If you want to self-host your content and manage your own IPNS record, follow these steps:</p>
+                <p>Follow these steps to configure a contenthash record for your ENS domain:</p>
 
-                <h4><span class="step-number">1</span>Ensure your IPFS node is running and reachable</h4>
-                <p>Make sure your IPFS daemon is active:</p>
-                <div class="code-block">ipfs daemon</div>
-                <p>Your IPFS daemon should remain online and be publicly accessible for best results. NAT and firewall
-                    rules can often lead to your IPFS node becoming unreachable.</p>
+                <h4><span class="step-number">1</span>Prepare Your Content</h4>
+                <p>First, you need to upload your website or application to a decentralized storage network like IPFS.</p>
 
-                <h4><span class="step-number">2</span>Publish your IPNS record</h4>
-                <p>Ensure that your content has been assigned a CID and is pinned to your node:</p>
-                <div class="code-block">ipfs add --cid-version 1 &lt;file|directory&gt;</div>
-                <p>Pin the CID from the output of the above command:</p>
-                <div class="code-block">ipfs pin add ${CID}</div>
-                <p>Replace <code>${CID}</code> with your actual IPFS content identifier:</p>
-                <div class="code-block">ipfs name publish ${CID}</div>
-                <p>(Optional) - Each IPNS record has configurable TTL (default 1h) and lifetime (default 48h) <a
-                        href="https://docs.ipfs.tech/concepts/ipns/#ipns-record-validity" target="_blank"
-                        style="color: #C3EFD7;"> settings.</a> Depending on your circumstances you may wish to increase
-                    or decrease these values when publishing your record. For example:</p>
-                <div class="code-block">ipfs name publish --ttl 5m --lifetime 24h ${CID}</div>
-                <p>Note - These settings can cause unexpected resolution problems. The default values are usually
-                    sufficient in most scenarios.</p>
+                <h4><span class="step-number">2</span>Get Your Content Hash</h4>
+                <p>Once uploaded, you'll receive a content identifier (CID) that looks like this:</p>
+                <div class="code-block">bafy...</div>
 
-                <h4><span class="step-number">3</span>(Optional) Configure record republishing</h4>
-                <p>By default, Kubo will republish IPNS records every 4 hours. This <a
-                        href="https://github.com/ipfs/kubo/blob/master/docs/config.md#ipnsrepublishperiod"
-                        target="_blank" style="color: #C3EFD7;">setting</a> can be modified in Kubo's configuration. The
-                    republishing interval should be set lower than the record liftime:</p>
-                <div class="code-block">ipfs config --json Ipns.RepublishPeriod "1h"</div>
+                <h4><span class="step-number">3</span>Open ENS Manager</h4>
+                <p>Go to <a href="https://app.ens.domains/" target="_blank" style="color: #C3EFD7;">app.ens.domains</a> and connect your wallet that owns the ENS domain.</p>
 
-                <h4><span class="step-number">4</span>Wait for propagation</h4>
-                <p>IPNS propagation can take several minutes to complete across the network.</p>
+                <h4><span class="step-number">4</span>Navigate to Your Domain</h4>
+                <p>Search for and select your ENS domain from your account.</p>
 
-                <h4><span class="step-number">5</span>Verify the record</h4>
-                <p>Replace <code>${IpnsRecord}</code> with the output of the IPNS record from step 2:</p>
-                <div class="code-block">ipfs name resolve ${IpnsRecord}</div>
-                <p>For best results, consider testing IPNS resolution from a different peer in order to verify DHT
-                    propagation.</p>
+                <h4><span class="step-number">5</span>Add Contenthash Record</h4>
+                <p>In the Records section, find "Content Hash" and click "Edit". Enter your content identifier with the appropriate prefix (IPFS example):</p>
+                <div class="code-block">ipfs://bafy...</div>
 
-                <hr width="50%" color="#C3EFD7" />
+                <h4><span class="step-number">6</span>Confirm Transaction</h4>
+                <p>Save the changes and confirm the transaction in your wallet. The update may take a few minutes to propagate.</p>
 
-                <p style="margin-top: 20px;"><strong>Need more help?</strong> Visit the <a
-                        href="https://docs.ipfs.tech/concepts/ipns/" target="_blank" style="color: #C3EFD7;">IPNS
-                        documentation</a> for detailed information.</p>
+                <h4><span class="step-number">7</span>Test Your Domain</h4>
+                <p>Once confirmed, try accessing your ENS domain through a supporting browser or service like eth.limo.</p>
+
+                <p style="margin-top: 20px;"><strong>Need more help?</strong> Visit the <a href="https://docs.ens.domains/dweb/intro" target="_blank" style="color: #C3EFD7;">ENS Records documentation</a> for detailed information.</p>
             </div>
         </div>
     </div>
-
-    <div id="gatewaysModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">🔄 Alternative IPFS Gateways</h2>
-                <span class="close" onclick="closeModal('gatewaysModal')">&times;</span>
-            </div>
-            <div class="modal-body">
-                <p>Try accessing your content through these alternative gateways:</p>
-
-                <h4>📁 For IPFS Content</h4>
-                <p>Replace <code>${CID}</code> with your actual IPFS content identifier:</p>
-                <div class="code-block multi-line">
-                    https://ipfs.io/ipfs/${CID}<br>
-                    https://${CID}.ipfs.dweb.link
-                </div>
-
-                <h4>🏷️ For IPNS Content</h4>
-                <p>Replace <code>${IpnsRecord}</code> with your IPNS record or ENS domain name:</p>
-                <div class="code-block multi-line">
-                    https://ipfs.io/ipns/${IpnsRecord}<br>
-                    https://${IpnsRecord}.ipns.dweb.link
-                </div>
-
-                <p style="margin-top: 20px;"><strong>Tip:</strong> If one gateway doesn't work, try the others.
-                    Different gateways may have different availability and performance characteristics.</p>
-            </div>
-        </div>
-    </div>
+    {{end}}
 
     <script>
-        function showIPNSHelp() {
-            document.getElementById('ipnsModal').style.display = 'block';
+        // Function to extract and clean ENS name from current URL
+        function getCleanEnsName() {
+            const hostname = window.location.hostname;
+            
+            // Check if hostname contains .eth
+            const ethIndex = hostname.indexOf('.eth');
+            if (ethIndex === -1) {
+                return null; // No .eth found
+            }
+            
+            // Extract everything up to and including .eth
+            const ensName = hostname.substring(0, ethIndex + 4);
+            return ensName;
+        }
+        
+        function updateEnsLinks() {
+            const ensName = getCleanEnsName();
+            
+            const links = {
+                ensManagerLink: ensName ? `https://app.ens.domains/${ensName}` : 'https://app.ens.domains/',
+                ensLookupLink: ensName ? `https://app.ens.domains/${ensName}?tab=records` : 'https://app.ens.domains/',
+                etherscanLookupLink: ensName ? `https://etherscan.io/name-lookup-search?id=${ensName}` : 'https://etherscan.io/name-lookup',
+                dohLookupLink: ensName ? `https://dns.eth.limo/dns-query?name=${ensName}` : 'https://eth.limo'
+            };
+            
+            for (var id in links) {
+                var element = document.getElementById(id);
+                if (element) element.href = links[id];
+            }
+            
+            var ensNameDisplay = document.getElementById('ensNameDisplay');
+            if (ensNameDisplay) {
+                ensNameDisplay.textContent = ensName || 'null';
+            }
         }
 
-        function tryAlternativeGateways() {
-            document.getElementById('gatewaysModal').style.display = 'block';
+        // Initialize links when page loads
+        document.addEventListener('DOMContentLoaded', updateEnsLinks);
+
+        {{if eq (placeholder "http.error.status_code") "404"}}
+        function showContenthashHelp() {
+            document.getElementById('contenthashModal').style.display = 'block';
         }
 
         function closeModal(modalId) {
@@ -612,35 +611,12 @@
         }
 
         window.onclick = function (event) {
-            const ipnsModal = document.getElementById('ipnsModal');
-            const gatewaysModal = document.getElementById('gatewaysModal');
-
-            if (event.target === ipnsModal) {
-                ipnsModal.style.display = 'none';
-            }
-            if (event.target === gatewaysModal) {
-                gatewaysModal.style.display = 'none';
+            const modal = document.getElementById('contenthashModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
             }
         }
-
-        let refreshTimer;
-
-        function startAutoRefresh() {
-            if (refreshTimer) clearInterval(refreshTimer);
-
-            refreshTimer = setInterval(() => {
-                fetch(window.location.href, { method: 'HEAD' })
-                    .then(response => {
-                        if (response.ok) {
-                            location.reload();
-                        }
-                    })
-                    .catch(() => {
-                    });
-            }, 300000);
-        }
-
-        document.addEventListener('DOMContentLoaded', startAutoRefresh);
+        {{end}}
     </script>
 </body>
 

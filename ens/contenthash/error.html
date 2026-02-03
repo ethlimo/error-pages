@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Unreachable | eth.limo IPFS Gateway</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #ffffff 0%, #C3EFD7 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #ffffff;
+        }
+
+        .error-container {
+            background: #111111;
+            border: 2px solid #C3EFD7;
+            border-radius: 16px;
+            box-shadow: 0 0 30px rgba(195, 239, 215, 0.2);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .error-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #C3EFD7, #C3EFD7, #C3EFD7);
+        }
+
+        .error-icon-link {
+            display: inline-block;
+            text-decoration: none;
+            margin: 0 auto 24px;
+        }
+
+        .error-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #C3EFD7, #C3EFD7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 20px rgba(195, 239, 215, 0.4);
+            padding: 20px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .error-icon:hover {
+            transform: scale(1.05);
+        }
+
+        .error-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #cccccc;
+            margin-bottom: 32px;
+            line-height: 1.4;
+        }
+
+        .error-details {
+            background: #1a1a1a;
+            border: 1px solid #333333;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 32px;
+            text-align: left;
+        }
+
+        .error-details h3 {
+            color: #C3EFD7;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .error-details h3::before {
+            content: '⚠️';
+            margin-right: 8px;
+        }
+
+        .error-details p {
+            color: #cccccc;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        .solutions {
+            text-align: left;
+            margin-bottom: 32px;
+        }
+
+        .solutions h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .solution-section {
+            background: #1a1a1a;
+            border: 2px solid #333333;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .solution-section:hover {
+            border-color: #C3EFD7;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(50, 255, 50, 0.2);
+        }
+
+        .solution-section h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .solution-section h3::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: #C3EFD7;
+            border-radius: 50%;
+            margin-right: 12px;
+        }
+
+        .solution-section p {
+            color: #cccccc;
+            line-height: 1.5;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #C3EFD7, #C3EFD7);
+            color: #000000;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(50, 255, 50, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #C3EFD7, #C3EFD7);
+            color: #000000;
+            border: 1px solid #C3EFD7;
+            font-weight: 600;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(195, 239, 215, 0.4);
+        }
+
+        .help-section {
+            background: linear-gradient(135deg, #1a1a1a, #333333);
+            color: #ffffff;
+            border: 1px solid #C3EFD7;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .help-section h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #C3EFD7;
+        }
+
+        .help-section p {
+            margin-bottom: 16px;
+            opacity: 0.9;
+            color: #cccccc;
+        }
+
+        .help-btn {
+            background: #C3EFD7;
+            color: #000000;
+            border: 2px solid #C3EFD7;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .help-btn:hover {
+            background: #C3EFD7;
+            border-color: #C3EFD7;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(50, 255, 50, 0.4);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: #1a1a1a;
+            margin: 5% auto;
+            padding: 30px;
+            border: 2px solid #C3EFD7;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(195, 239, 215, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            color: #C3EFD7;
+            font-size: 22px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .close {
+            color: #cccccc;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: #C3EFD7;
+        }
+
+        .modal-body {
+            color: #cccccc;
+            line-height: 1.6;
+        }
+
+        .modal-body h4 {
+            color: #ffffff;
+            margin: 20px 0 10px 0;
+            font-size: 16px;
+        }
+
+        .modal-body p {
+            margin-bottom: 15px;
+        }
+
+        .code-block {
+            background: #000000;
+            border: 1px solid #333333;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+            color: #C3EFD7;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: '$ ';
+            color: #888888;
+        }
+
+        .code-block.multi-line::before {
+            display: none;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: #C3EFD7;
+            color: #000000;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            font-weight: 600;
+            font-size: 12px;
+            margin-right: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .error-container {
+                padding: 24px;
+                margin: 10px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .subtitle {
+                font-size: 16px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                justify-content: center;
+            }
+
+            .modal-content {
+                margin: 10% auto;
+                padding: 20px;
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="error-container">
+        <a href="https://eth.limo" target="_blank" class="error-icon-link">
+            <div class="error-icon">
+                <svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="400" height="400" fill="black" />
+                    <path
+                        d="M284.905 257.153C315.608 239.427 315.608 210.687 284.905 192.961C254.202 175.234 204.424 175.234 173.721 192.961L91 240.72L202.184 304.912L284.905 257.153Z"
+                        fill="white" />
+                    <path
+                        d="M110.626 241.345L101.314 235.969V225.217V137.522C101.314 108.444 121.729 96.6577 146.911 111.197C172.094 125.736 192.508 161.095 192.508 190.173V277.868V288.620L183.197 283.244L110.626 241.345Z"
+                        fill="black" stroke="white" stroke-width="21.5045" />
+                    <path d="M106.239 235.764L192.929 190.067" stroke="white" stroke-width="16.1284" />
+                </svg>
+            </div>
+        </a>
+
+        <h1>Content Unreachable</h1>
+        <p class="subtitle">We're having trouble accessing your IPFS content right now.</p>
+
+        <div class="error-details">
+            <h3>What happened?</h3>
+            <p>This usually occurs when IPNS name resolution fails or the IPFS peers serving your content are currently
+                unreachable. Don't worry - this is often temporary and can be resolved with a few simple steps.</p>
+        </div>
+
+        <div class="solutions">
+            <h2>Troubleshooting Steps</h2>
+
+            <div class="solution-section">
+                <h3>For IPNS Users</h3>
+                <p>If you're using IPNS (InterPlanetary Name System), your naming record might need to be republished or
+                    updated.</p>
+                <div class="action-buttons">
+                    <a href="https://ipns.ipfs.network/" class="btn btn-primary" target="_blank">
+                        🔍 IPNS Checker
+                    </a>
+                    <button class="btn btn-secondary" onclick="showIPNSHelp()">
+                        🔧 IPNS Guide
+                    </button>
+                </div>
+            </div>
+
+            <div class="solution-section">
+                <h3>Check IPFS Content Reachability</h3>
+                <p>Verify if your content is properly distributed across the IPFS network using these diagnostic tools:
+                </p>
+                <div class="action-buttons">
+                    <a href="https://check.ipfs.network/" class="btn btn-primary" target="_blank">
+                        🔍 IPFS Checker
+                    </a>
+                    <a href="https://cid.contact/" class="btn btn-primary" target="_blank">
+                        🌍 IPNI Discovery
+                    </a>
+                </div>
+            </div>
+
+            <div class="solution-section">
+                <h3>Network Status</h3>
+                <p>Sometimes the issue is temporary network connectivity. Try accessing your content through different
+                    gateways.</p>
+                <div class="action-buttons">
+                    <a href="https://ipfs.github.io/public-gateway-checker/" class="btn btn-primary" target="_blank">
+                        🌐 Gateway Status
+                    </a>
+                    <button class="btn btn-secondary" onclick="tryAlternativeGateways()">
+                        🔄 Try Other Gateways
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="help-section">
+            <h3>Still Having Issues?</h3>
+            <p>If the problem persists after trying these steps, it might be a temporary network propagation
+                issue.<br><br>If you require additional assistance please join our Discord <a
+                    href="http://discord.gg/zf8NxW94rB" target="_blank" style="color: #C3EFD7;"> server</a> and create a
+                ticket in the <code>#support-tickets</code> channel and we will get back to you as soon as we can.</p>
+            <a href="https://discord.gg/7HkTmrpuP9" class="help-btn" target="_blank">
+                📜 Get Help
+            </a>
+        </div>
+    </div>
+
+    <div id="ipnsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">🔧 IPNS Guide</h2>
+                <span class="close" onclick="closeModal('ipnsModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <hr width="50%" color="#C3EFD7" /><br>
+                <h3>🚀 Hosted IPFS Services</h3><br>
+                <p>If managing your own IPFS infrastructure is challenging, consider using hosted services for more
+                    reliable IPFS and IPNS hosting:</p>
+                <div class="action-buttons" style="margin: 15px 0;">
+                    <a href="https://fleek.xyz/docs/platform/hosting/" class="btn btn-primary" target="_blank">
+                        🚀 Fleek
+                    </a>
+                    <a href="https://filebase.com/" class="btn btn-primary" target="_blank">
+                        📁 Filebase
+                    </a>
+                </div>
+                <p>These services handle IPFS pinning, IPNS records management, and provide reliable gateways without
+                    requiring you to run your own IPFS node.</p>
+                <p>If you are already using a hosted IPFS/IPNS service provider please double-check the following:</p>
+                <h4><span class="step-number">1</span>Ensure the IPFS content has been uploaded and pinned with the
+                    provider.</h4>
+                <h4><span class="step-number">2</span>Verify all IPNS configurations and ensure the record points to the
+                    latest version of your content (CID).</h4>
+                <h4><span class="step-number">3</span>Consider any provider related outages by checking their service
+                    status pages and optionally engaging with support staff who might be able to assist you.</h4>
+                <h4><span class="step-number">4</span>Confirm the content is reachable by using the <a
+                        href="https://ipns.ipfs.network/" target="_blank" style="color: #C3EFD7;">IPNS</a> and <a
+                        href="https://check.ipfs.network/" target="_blank" style="color: #C3EFD7;">IPFS</a> checker
+                    utilities.</h4><br>
+                <hr width="50%" color="#C3EFD7" /><br>
+                <h3>Alternative: Self-Hosted IPNS</h3><br>
+                <p>If you want to self-host your content and manage your own IPNS record, follow these steps:</p>
+
+                <h4><span class="step-number">1</span>Ensure your IPFS node is running and reachable</h4>
+                <p>Make sure your IPFS daemon is active:</p>
+                <div class="code-block">ipfs daemon</div>
+                <p>Your IPFS daemon should remain online and be publicly accessible for best results. NAT and firewall
+                    rules can often lead to your IPFS node becoming unreachable.</p>
+
+                <h4><span class="step-number">2</span>Publish your IPNS record</h4>
+                <p>Ensure that your content has been assigned a CID and is pinned to your node:</p>
+                <div class="code-block">ipfs add --cid-version 1 &lt;file|directory&gt;</div>
+                <p>Pin the CID from the output of the above command:</p>
+                <div class="code-block">ipfs pin add ${CID}</div>
+                <p>Replace <code>${CID}</code> with your actual IPFS content identifier:</p>
+                <div class="code-block">ipfs name publish ${CID}</div>
+                <p>(Optional) - Each IPNS record has configurable TTL (default 1h) and lifetime (default 48h) <a
+                        href="https://docs.ipfs.tech/concepts/ipns/#ipns-record-validity" target="_blank"
+                        style="color: #C3EFD7;"> settings.</a> Depending on your circumstances you may wish to increase
+                    or decrease these values when publishing your record. For example:</p>
+                <div class="code-block">ipfs name publish --ttl 5m --lifetime 24h ${CID}</div>
+                <p>Note - These settings can cause unexpected resolution problems. The default values are usually
+                    sufficient in most scenarios.</p>
+
+                <h4><span class="step-number">3</span>(Optional) Configure record republishing</h4>
+                <p>By default, Kubo will republish IPNS records every 4 hours. This <a
+                        href="https://github.com/ipfs/kubo/blob/master/docs/config.md#ipnsrepublishperiod"
+                        target="_blank" style="color: #C3EFD7;">setting</a> can be modified in Kubo's configuration. The
+                    republishing interval should be set lower than the record liftime:</p>
+                <div class="code-block">ipfs config --json Ipns.RepublishPeriod "1h"</div>
+
+                <h4><span class="step-number">4</span>Wait for propagation</h4>
+                <p>IPNS propagation can take several minutes to complete across the network.</p>
+
+                <h4><span class="step-number">5</span>Verify the record</h4>
+                <p>Replace <code>${IpnsRecord}</code> with the output of the IPNS record from step 2:</p>
+                <div class="code-block">ipfs name resolve ${IpnsRecord}</div>
+                <p>For best results, consider testing IPNS resolution from a different peer in order to verify DHT
+                    propagation.</p>
+
+                <hr width="50%" color="#C3EFD7" />
+
+                <p style="margin-top: 20px;"><strong>Need more help?</strong> Visit the <a
+                        href="https://docs.ipfs.tech/concepts/ipns/" target="_blank" style="color: #C3EFD7;">IPNS
+                        documentation</a> for detailed information.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="gatewaysModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">🔄 Alternative IPFS Gateways</h2>
+                <span class="close" onclick="closeModal('gatewaysModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Try accessing your content through these alternative gateways:</p>
+
+                <h4>📁 For IPFS Content</h4>
+                <p>Replace <code>${CID}</code> with your actual IPFS content identifier:</p>
+                <div class="code-block multi-line">
+                    https://ipfs.io/ipfs/${CID}<br>
+                    https://${CID}.ipfs.dweb.link
+                </div>
+
+                <h4>🏷️ For IPNS Content</h4>
+                <p>Replace <code>${IpnsRecord}</code> with your IPNS record or ENS domain name:</p>
+                <div class="code-block multi-line">
+                    https://ipfs.io/ipns/${IpnsRecord}<br>
+                    https://${IpnsRecord}.ipns.dweb.link
+                </div>
+
+                <p style="margin-top: 20px;"><strong>Tip:</strong> If one gateway doesn't work, try the others.
+                    Different gateways may have different availability and performance characteristics.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showIPNSHelp() {
+            document.getElementById('ipnsModal').style.display = 'block';
+        }
+
+        function tryAlternativeGateways() {
+            document.getElementById('gatewaysModal').style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        window.onclick = function (event) {
+            const ipnsModal = document.getElementById('ipnsModal');
+            const gatewaysModal = document.getElementById('gatewaysModal');
+
+            if (event.target === ipnsModal) {
+                ipnsModal.style.display = 'none';
+            }
+            if (event.target === gatewaysModal) {
+                gatewaysModal.style.display = 'none';
+            }
+        }
+
+        let refreshTimer;
+
+        function startAutoRefresh() {
+            if (refreshTimer) clearInterval(refreshTimer);
+
+            refreshTimer = setInterval(() => {
+                fetch(window.location.href, { method: 'HEAD' })
+                    .then(response => {
+                        if (response.ok) {
+                            location.reload();
+                        }
+                    })
+                    .catch(() => {
+                    });
+            }, 300000);
+        }
+
+        document.addEventListener('DOMContentLoaded', startAutoRefresh);
+    </script>
+</body>
+
+</html>

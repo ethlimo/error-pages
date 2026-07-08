@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{if eq (placeholder "http.error.status_code") "404"}}ENS Domain Not Configured{{else}}Service Issue{{end}} | eth.limo</title>
+    <meta name="robots" content="noindex">
+    <title>{{if eq (placeholder "http.error.status_code") "404"}}ENS Domain Not Configured{{else if eq (placeholder "http.error.status_code") "422"}}Unsupported Contenthash{{else}}Service Issue{{end}} | eth.limo</title>
     <style>
         * {
             margin: 0;
@@ -43,7 +44,7 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, #C3EFD7, #C3EFD7, #C3EFD7);
+            background: #C3EFD7;
         }
 
         .error-icon-link {
@@ -55,7 +56,7 @@
         .error-icon {
             width: 80px;
             height: 80px;
-            background: linear-gradient(135deg, #C3EFD7, #C3EFD7);
+            background: #C3EFD7;
             border-radius: 20px;
             display: flex;
             align-items: center;
@@ -164,7 +165,7 @@
         .solution-section:hover {
             border-color: #C3EFD7;
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(50, 255, 50, 0.2);
+            box-shadow: 0 8px 25px rgba(195, 239, 215, 0.2);
         }
 
         .solution-section h3 {
@@ -212,24 +213,25 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #C3EFD7, #C3EFD7);
+            background: #C3EFD7;
             color: #000000;
             font-weight: 600;
         }
 
         .btn-primary:hover {
             transform: translateY(-1px);
-            box-shadow: 0 4px 15px rgba(50, 255, 50, 0.4);
+            box-shadow: 0 4px 15px rgba(195, 239, 215, 0.4);
         }
 
         .btn-secondary {
-            background: linear-gradient(135deg, #C3EFD7, #C3EFD7);
-            color: #000000;
+            background: transparent;
+            color: #C3EFD7;
             border: 1px solid #C3EFD7;
             font-weight: 600;
         }
 
         .btn-secondary:hover {
+            background: rgba(195, 239, 215, 0.1);
             transform: translateY(-1px);
             box-shadow: 0 4px 15px rgba(195, 239, 215, 0.4);
         }
@@ -272,7 +274,7 @@
             background: #C3EFD7;
             border-color: #C3EFD7;
             transform: translateY(-1px);
-            box-shadow: 0 4px 15px rgba(50, 255, 50, 0.4);
+            box-shadow: 0 4px 15px rgba(195, 239, 215, 0.4);
         }
 
         .modal {
@@ -368,6 +370,16 @@
             margin-right: 10px;
         }
 
+        @media (prefers-reduced-motion: reduce) {
+            .error-icon {
+                animation: none;
+            }
+
+            * {
+                transition: none !important;
+            }
+        }
+
         @media (max-width: 768px) {
             .error-container {
                 padding: 24px;
@@ -401,9 +413,10 @@
 
 <body>
     <div class="error-container">
-        <a href="https://eth.limo" target="_blank" class="error-icon-link">
+        <a href="https://eth.limo" target="_blank" rel="noopener noreferrer" class="error-icon-link" aria-label="eth.limo home">
             <div class="error-icon">
-                <svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="iconTitle">
+                    <title id="iconTitle">eth.limo logo</title>
                     <rect width="400" height="400" fill="black" />
                     <path
                         d="M284.905 257.153C315.608 239.427 315.608 210.687 284.905 192.961C254.202 175.234 204.424 175.234 173.721 192.961L91 240.72L202.184 304.912L284.905 257.153Z"
@@ -418,7 +431,7 @@
 
         {{if eq (placeholder "http.error.status_code") "404"}}
             <h1>ENS Domain Not Configured</h1>
-            <p class="subtitle"><span id="ensNameDisplay"></span> doesn't have a contenthash record.</p>
+            <p class="subtitle"><span id="ensNameDisplay">This domain</span> doesn't have a contenthash record.</p>
 
             <div class="error-details">
                 <h3>What's missing?</h3>
@@ -432,13 +445,13 @@
                     <h3>Check Current Records</h3>
                     <p>Verify what records are currently set for your ENS domain and see if contenthash is configured.</p>
                     <div class="action-buttons">
-                        <a href="#" id="ensLookupLink" class="btn btn-primary" target="_blank">
+                        <a href="#" id="ensLookupLink" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
                             🔍 ENS Lookup
                         </a>
-                        <a href="#" id="etherscanLookupLink" class="btn btn-secondary" target="_blank">
+                        <a href="#" id="etherscanLookupLink" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
                             📒 Etherscan
                         </a>
-                        <a href="#" id="dohLookupLink" class="btn btn-secondary" target="_blank">
+                        <a href="#" id="dohLookupLink" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
                             🖥️ dns.eth.limo
                         </a>
                     </div>
@@ -448,10 +461,10 @@
                     <h3>Configure Contenthash</h3>
                     <p>Use the ENS Manager to set up your contenthash record and point it to your decentralized content.</p>
                     <div class="action-buttons">
-                        <a href="#" id="ensManagerLink" class="btn btn-primary" target="_blank">
+                        <a href="#" id="ensManagerLink" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
                             🔧 ENS Manager
                         </a>
-                        <button class="btn btn-secondary" onclick="showContenthashHelp()">
+                        <button class="btn btn-secondary" id="setupGuideBtn">
                             📚 Setup Guide
                         </button>
                     </div>
@@ -461,10 +474,10 @@
                     <h3>Learn About ENS</h3>
                     <p>New to ENS? Learn about how ENS domains work and how to manage your decentralized identity.</p>
                     <div class="action-buttons">
-                        <a href="https://docs.ens.domains/" class="btn btn-primary" target="_blank">
+                        <a href="https://docs.ens.domains/" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
                             📖 ENS Documentation
                         </a>
-                        <a href="https://eth-limo.gitbook.io/documentation" class="btn btn-secondary" target="_blank">
+                        <a href="https://eth-limo.gitbook.io/documentation" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
                             🌐 eth.limo Documentation
                         </a>
                     </div>
@@ -474,8 +487,70 @@
             <div class="help-section">
                 <h3>Need Help?</h3>
                 <p>If you're having trouble setting up your contenthash record, join the ENS community for support and guidance.</p>
-                <a href="https://discuss.ens.domains/" class="help-btn" target="_blank">
+                <a href="https://discuss.ens.domains/" class="help-btn" target="_blank" rel="noopener noreferrer">
                     💬 ENS Forum
+                </a>
+            </div>
+        {{else if eq (placeholder "http.error.status_code") "422"}}
+            <h1>Unsupported Contenthash</h1>
+            <p class="subtitle"><span id="ensNameDisplay">This domain</span> has a contenthash record that eth.limo can't resolve.</p>
+
+            <div class="error-details">
+                <h3>What's wrong?</h3>
+                <p>This ENS domain has a contenthash record, but its value uses a protocol or encoding that isn't supported by the eth.limo service. The record may be malformed, or it may point to a storage network that eth.limo can't retrieve content from.</p>
+            </div>
+
+            <div class="solutions">
+                <h2>Troubleshooting Guide</h2>
+
+                <div class="solution-section">
+                    <h3>Check Current Records</h3>
+                    <p>Inspect the contenthash record currently set for your ENS domain to see what value it contains.</p>
+                    <div class="action-buttons">
+                        <a href="#" id="ensLookupLink" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                            🔍 ENS Lookup
+                        </a>
+                        <a href="#" id="etherscanLookupLink" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
+                            📒 Etherscan
+                        </a>
+                        <a href="#" id="dohLookupLink" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
+                            🖥️ dns.eth.limo
+                        </a>
+                    </div>
+                </div>
+
+                <div class="solution-section">
+                    <h3>Update Contenthash</h3>
+                    <p>Use the ENS Manager to point your contenthash record at a supported storage protocol, such as IPFS or IPNS.</p>
+                    <div class="action-buttons">
+                        <a href="#" id="ensManagerLink" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                            🔧 ENS Manager
+                        </a>
+                        <button class="btn btn-secondary" id="setupGuideBtn">
+                            📚 Setup Guide
+                        </button>
+                    </div>
+                </div>
+
+                <div class="solution-section">
+                    <h3>Learn More</h3>
+                    <p>Read up on which contenthash formats are supported and how to configure them correctly.</p>
+                    <div class="action-buttons">
+                        <a href="https://eth-limo.gitbook.io/documentation" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                            🌐 eth.limo Documentation
+                        </a>
+                        <a href="https://docs.ens.domains/" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
+                            📖 ENS Documentation
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h3>Need Help?</h3>
+                <p>If you believe this contenthash should be supported, or you need help updating your record, please reach out for support.</p>
+                <a href="https://discord.gg/zf8NxW94rB" class="help-btn" target="_blank" rel="noopener noreferrer">
+                    🎫 Get Support
                 </a>
             </div>
         {{else}}
@@ -494,7 +569,7 @@
                     <h3>Try Again</h3>
                     <p>The issue might be temporary. Wait a moment and refresh the page to try again.</p>
                     <div class="action-buttons">
-                        <button class="btn btn-primary" onclick="location.reload()">
+                        <button class="btn btn-primary" id="refreshBtn">
                             🔄 Refresh Page
                         </button>
                     </div>
@@ -504,7 +579,7 @@
                     <h3>Check Service Status</h3>
                     <p>See if there are any known issues or maintenance periods affecting the service.</p>
                     <div class="action-buttons">
-                        <a href="https://eth.limo" class="btn btn-primary" target="_blank">
+                        <a href="https://eth.limo" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
                             🏠 Homepage
                         </a>
                     </div>
@@ -515,19 +590,19 @@
                 <h3>Still Having Issues?</h3>
                 <p>If the problem persists, please reach out for support. Include the error details below when contacting us.</p>
                 <p><strong>Error:</strong> {{placeholder "http.error.status_code"}} {{placeholder "http.error.status_text"}}</p>
-                <a href="https://discord.gg/zf8NxW94rB" class="help-btn" target="_blank">
+                <a href="https://discord.gg/zf8NxW94rB" class="help-btn" target="_blank" rel="noopener noreferrer">
                     🎫 Get Support
                 </a>
             </div>
         {{end}}
     </div>
 
-    {{if eq (placeholder "http.error.status_code") "404"}}
+    {{if eq (placeholder "http.error.status_code") "404" "422"}}
     <div id="contenthashModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
             <div class="modal-header">
-                <h2 class="modal-title">📚 Contenthash Setup Guide</h2>
-                <span class="close" onclick="closeModal('contenthashModal')">&times;</span>
+                <h2 class="modal-title" id="modalTitle">📚 Contenthash Setup Guide</h2>
+                <span class="close" id="modalClose" role="button" tabindex="0" aria-label="Close">&times;</span>
             </div>
             <div class="modal-body">
                 <p>Follow these steps to configure a contenthash record for your ENS domain:</p>
@@ -540,7 +615,7 @@
                 <div class="code-block">bafy...</div>
 
                 <h4><span class="step-number">3</span>Open ENS Manager</h4>
-                <p>Go to <a href="https://app.ens.domains/" target="_blank" style="color: #C3EFD7;">app.ens.domains</a> and connect your wallet that owns the ENS domain.</p>
+                <p>Go to <a href="https://app.ens.domains/" target="_blank" rel="noopener noreferrer" style="color: #C3EFD7;">app.ens.domains</a> and connect your wallet that owns the ENS domain.</p>
 
                 <h4><span class="step-number">4</span>Navigate to Your Domain</h4>
                 <p>Search for and select your ENS domain from your account.</p>
@@ -555,68 +630,81 @@
                 <h4><span class="step-number">7</span>Test Your Domain</h4>
                 <p>Once confirmed, try accessing your ENS domain through a supporting browser or service like eth.limo.</p>
 
-                <p style="margin-top: 20px;"><strong>Need more help?</strong> Visit the <a href="https://docs.ens.domains/dweb/intro" target="_blank" style="color: #C3EFD7;">ENS Records documentation</a> for detailed information.</p>
+                <p style="margin-top: 20px;"><strong>Need more help?</strong> Visit the <a href="https://docs.ens.domains/dweb/intro" target="_blank" rel="noopener noreferrer" style="color: #C3EFD7;">ENS Records documentation</a> for detailed information.</p>
             </div>
         </div>
     </div>
     {{end}}
 
     <script>
-        // Function to extract and clean ENS name from current URL
+        // eth.limo serves <name>.eth.limo — derive the ENS name by stripping the .limo suffix.
+        // (indexOf('.eth') is wrong: it mis-parses subdomains of names that begin with "eth".)
         function getCleanEnsName() {
             const hostname = window.location.hostname;
-            
-            // Check if hostname contains .eth
-            const ethIndex = hostname.indexOf('.eth');
-            if (ethIndex === -1) {
-                return null; // No .eth found
+            if (!hostname.endsWith('.eth.limo')) {
+                return null;
             }
-            
-            // Extract everything up to and including .eth
-            const ensName = hostname.substring(0, ethIndex + 4);
-            return ensName;
+            return hostname.slice(0, -'.limo'.length);
         }
-        
+
         function updateEnsLinks() {
             const ensName = getCleanEnsName();
-            
+            const encoded = ensName ? encodeURIComponent(ensName) : '';
+
             const links = {
-                ensManagerLink: ensName ? `https://app.ens.domains/${ensName}` : 'https://app.ens.domains/',
-                ensLookupLink: ensName ? `https://app.ens.domains/${ensName}?tab=records` : 'https://app.ens.domains/',
-                etherscanLookupLink: ensName ? `https://etherscan.io/name-lookup-search?id=${ensName}` : 'https://etherscan.io/name-lookup',
-                dohLookupLink: ensName ? `https://dns.eth.limo/dns-query?name=${ensName}` : 'https://eth.limo'
+                ensManagerLink: ensName ? `https://app.ens.domains/${encoded}` : 'https://app.ens.domains/',
+                ensLookupLink: ensName ? `https://app.ens.domains/${encoded}?tab=records` : 'https://app.ens.domains/',
+                etherscanLookupLink: ensName ? `https://etherscan.io/name-lookup-search?id=${encoded}` : 'https://etherscan.io/name-lookup',
+                dohLookupLink: ensName ? `https://dns.eth.limo/dns-query?name=${encoded}` : 'https://eth.limo'
             };
-            
+
             for (var id in links) {
                 var element = document.getElementById(id);
                 if (element) element.href = links[id];
             }
-            
+
             var ensNameDisplay = document.getElementById('ensNameDisplay');
             if (ensNameDisplay) {
-                ensNameDisplay.textContent = ensName || 'null';
+                ensNameDisplay.textContent = ensName || 'This domain';
             }
         }
 
-        // Initialize links when page loads
-        document.addEventListener('DOMContentLoaded', updateEnsLinks);
-
-        {{if eq (placeholder "http.error.status_code") "404"}}
         function showContenthashHelp() {
-            document.getElementById('contenthashModal').style.display = 'block';
+            const modal = document.getElementById('contenthashModal');
+            if (modal) modal.style.display = 'block';
         }
 
         function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
+            const modal = document.getElementById(modalId);
+            if (modal) modal.style.display = 'none';
         }
 
-        window.onclick = function (event) {
+        document.addEventListener('DOMContentLoaded', function () {
+            updateEnsLinks();
+
+            var setupGuideBtn = document.getElementById('setupGuideBtn');
+            if (setupGuideBtn) setupGuideBtn.addEventListener('click', showContenthashHelp);
+
+            var refreshBtn = document.getElementById('refreshBtn');
+            if (refreshBtn) refreshBtn.addEventListener('click', function () { location.reload(); });
+
+            var modalClose = document.getElementById('modalClose');
+            if (modalClose) modalClose.addEventListener('click', function () { closeModal('contenthashModal'); });
+        });
+
+        // Close the modal when clicking the backdrop or pressing Escape.
+        window.addEventListener('click', function (event) {
             const modal = document.getElementById('contenthashModal');
-            if (event.target === modal) {
+            if (modal && event.target === modal) {
                 modal.style.display = 'none';
             }
-        }
-        {{end}}
+        });
+
+        window.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                closeModal('contenthashModal');
+            }
+        });
     </script>
 </body>
 

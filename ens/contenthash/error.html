@@ -637,14 +637,14 @@
     {{end}}
 
     <script>
-        // eth.limo serves <name>.eth.limo — derive the ENS name by stripping the .limo suffix.
-        // (indexOf('.eth') is wrong: it mis-parses subdomains of names that begin with "eth".)
+        // The ENS name is the DNS labels up to and including the last "eth" label.
         function getCleanEnsName() {
-            const hostname = window.location.hostname;
-            if (!hostname.endsWith('.eth.limo')) {
+            const labels = window.location.hostname.split('.');
+            const ethIndex = labels.lastIndexOf('eth');
+            if (ethIndex < 1) {
                 return null;
             }
-            return hostname.slice(0, -'.limo'.length);
+            return labels.slice(0, ethIndex + 1).join('.');
         }
 
         function updateEnsLinks() {
@@ -653,7 +653,7 @@
 
             const links = {
                 ensManagerLink: ensName ? `https://app.ens.domains/${encoded}` : 'https://app.ens.domains/',
-                ensLookupLink: ensName ? `https://app.ens.domains/${encoded}?tab=records` : 'https://app.ens.domains/',
+                ensLookupLink: ensName ? `https://app.ens.domains/${encoded}` : 'https://app.ens.domains/',
                 etherscanLookupLink: ensName ? `https://etherscan.io/name-lookup-search?id=${encoded}` : 'https://etherscan.io/name-lookup',
                 dohLookupLink: ensName ? `https://dns.eth.limo/dns-query?name=${encoded}` : 'https://eth.limo'
             };
